@@ -22,7 +22,7 @@ class TreeSort(models.Model):
 
 class Tree(models.Model):
     """Tree object."""
-    (HEALTHY, DRY, BROKEN, 
+    (HEALTHY, DRY, BROKEN,
      TOPING, MISTLETOE, DYING, ) = range(6)
 
     STATES = (
@@ -34,8 +34,8 @@ class Tree(models.Model):
         (DYING, 'DYING'),
     )
 
-    lat = models.DecimalField(max_digits=9, decimal_places=6)
-    long = models.DecimalField(max_digits=9, decimal_places=6)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
 
     tree_state = models.IntegerField(choices=STATES)
 

@@ -34,8 +34,8 @@ class Tree(models.Model):
         (DYING, 'DYING'),
     )
 
-    latitude = models.DecimalField(max_digits=9, decimal_places=6)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
 
     tree_state = models.IntegerField(choices=STATES)
 
@@ -49,6 +49,7 @@ class Tree(models.Model):
     description = models.TextField(blank=True)
 
     owner = models.ForeignKey(User,
+                              related_name='trees',
                               on_delete=models.SET(get_sentinel_user))
 
     active = models.BooleanField(default=True)

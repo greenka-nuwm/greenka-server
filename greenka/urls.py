@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 import tree.views as tree_views
+from tree.views import get_user
 
 from django.contrib import admin
 from django.urls import path, include
@@ -23,6 +24,7 @@ from rest_framework.authtoken import views
 urlpatterns = [
     path(r'api-auth/', include('rest_framework.urls')),
     path(r'admin/', admin.site.urls),
-    path(r'tree/', include('tree.urls')),
+    path(r'user/self', get_user),
+    path(r'trees/', include('tree.urls')),
     path(r'token', views.obtain_auth_token)
 ]

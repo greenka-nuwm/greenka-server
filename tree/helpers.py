@@ -1,4 +1,9 @@
 from django.db.models import Func, F
+import os
+
+IMAGE_SAVE_FORMAT = "%(pk)s_%(name)s"
+
+DISTANCE_UNIT = 6371.0
 
 
 class Sin(Func):
@@ -15,9 +20,6 @@ class Acos(Func):
 
 class Radians(Func):
     function = 'RADIANS'
-
-
-DISTANCE_UNIT = 6371.0
 
 
 def get_range(model, latitude, longitude, outer_border, inner_border=0):
@@ -39,16 +41,19 @@ def get_range(model, latitude, longitude, outer_border, inner_border=0):
         Cos(Radians(F('longitude')) - Radians(longitude)) +
         Sin(Radians(latitude)) * Sin(Radians(F('latitude'))))
 
-    print("expr: ", query_expression)
-
     query = model.objects.annotate(distance=query_expression)
-    print(dir(query[:][0]))
-    print(query[:][0].distance)
-    # query = query.filter(distance__range=(inner_border, outer_border))
+    query = query.filter(distance__range=(inner_border, outer_border))
     query = query.filter(distance__lt=outer_border)
-    print(query[:])
     query = query.order_by('distance')
-    print(query.query)
-    print(query[:])
 
     return query
+
+
+def save_image(img_obj, tree_obj):
+    url = os.path.join("img", IMAGE_SAVE_FORMAT % {'pk': tree_obj.pk, 'name': img_obj.name})
+    if img_obj.content_type.startswith('image/'):
+        with open(url, 'wb') as out_file:
+            out_file.write(img_obj.read())
+        return url
+    else:
+        raise ValueError("Only image accepted.")

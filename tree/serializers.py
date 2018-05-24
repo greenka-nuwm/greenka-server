@@ -13,9 +13,23 @@ class UserSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class TreeImageSerializer(serializers.ModelSerializer):
+    url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TreeImages
+        fields = ('url', )
+
+    def get_url(self, image):
+        request = self.context.get('request')
+        url = image.url.url
+        return request.build_absolute_uri(url)
+
+
 class TreeSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.id')
     distance = serializers.FloatField(read_only=True)
+    images = TreeImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Tree

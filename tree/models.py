@@ -61,6 +61,9 @@ class Tree(models.Model):
 
 class TreeImages(models.Model):
     """Contain path to image attached to specific tree."""
-    url = models.ImageField(upload_to="static/img", max_length=128)
-    tree = models.ForeignKey('Tree', on_delete=models.CASCADE)
+    url = models.ImageField(upload_to="static/img", max_length=128, unique=True)
+    tree = models.ForeignKey('Tree', related_name='images', on_delete=models.CASCADE)
     visible = models.BooleanField(default=False)
+
+    def __str__(self):
+        return '/' + str(self.url.path)

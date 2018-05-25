@@ -10,6 +10,7 @@ register_converter(FloatConverter, 'float')
 urlpatterns = [
     path(r'<float:lat>,<float:lng>/<str:distance>', tree_views.TreeListReadOnlyView.as_view()),
     path(r'<int:pk>', tree_views.TreeDetailsReadOnlyView.as_view()),
+    path(r'<int:pk>/confirm', tree_views.confirm_tree),
     path(r'', tree_views.TreeAddView.as_view()),
     path(r'all', tree_views.get_trees),
     path(r'<int:pk>/image/', tree_views.TreeImageCreateView.as_view()),

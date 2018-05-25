@@ -56,7 +56,7 @@ class Tree(models.Model):
     visible = models.BooleanField(default=True)
 
     approved = models.BooleanField(default=False)
-    confirms = models.IntegerField(default=1)
+    confirms = models.ManyToManyField(User)
 
 
 class TreeImages(models.Model):

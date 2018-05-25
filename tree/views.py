@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework import exceptions as exc
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.db import IntegrityError
 
@@ -73,6 +74,9 @@ class TreeImageCreateView(APIView):
             return Response({'error': 'Wrong tree ID.'},
                             status=status.HTTP_400_BAD_REQUEST)
 
+        if not perm.IsTreeImageTreeOwner().has_object_permission(request, self, tree_obj):
+            raise exc.PermissionDenied()
+
         url = save_image(request.data.get('img'), tree_obj)
         serializer = ser.TreeImageSerializer(data={})
         if serializer.is_valid():
@@ -83,3 +87,20 @@ class TreeImageCreateView(APIView):
                                 status=status.HTTP_400_BAD_REQUEST)
             return Response(status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication, ))
+@permission_classes((IsAuthenticated, ))
+def confirm_tree(request, pk):
+    try:
+        tree = Tree.objects.get(pk=pk)
+    except Exception:
+        return Response({'error': 'Wrong tree ID.'},
+                        status=status.HTTP_400_BAD_REQUEST)
+
+    if tree.confirms.filter(pk=request.user.pk).exists():
+        tree.confirms.remove(request.user)
+    else:
+        tree.confirms.add(request.user)
+    return Response(status=status.HTTP_200_OK)

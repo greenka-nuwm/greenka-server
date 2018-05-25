@@ -1,3 +1,4 @@
+import os
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from tree.models import Tree, TreeType, TreeSort, TreeImages
@@ -21,16 +22,21 @@ class TreeImageSerializer(serializers.ModelSerializer):
         fields = ('url', )
 
     def get_url(self, image):
-        request = self.context.get('request')
-        url = image.url.url
-        return request.build_absolute_uri(url)
+        return os.sep + str(image.url)
 
 
 class TreeSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.id')
     distance = serializers.FloatField(read_only=True)
     images = TreeImageSerializer(many=True, read_only=True)
+    confirms = serializers.SerializerMethodField()
 
     class Meta:
         model = Tree
-        fields = "__all__"
+        exclude = ('active', )
+        read_only = (
+            'confirms',
+        )
+
+    def get_confirms(self, tree):
+        return tree.confirms.all().count()

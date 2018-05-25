@@ -11,4 +11,4 @@ class IsTreeImageTreeOwner(permissions.BasePermission):
     """Check if user can attach image to tree"""
 
     def has_object_permission(self, request, view, obj):
-        return obj.tree.owner == request.user
+        return obj.owner == request.user

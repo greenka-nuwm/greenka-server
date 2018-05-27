@@ -1,4 +1,4 @@
-from django.db.models import Func, F
+from django.db.models import Func, F, Max, Min
 import os
 
 IMAGE_SAVE_FORMAT = "%(pk)s_%(name)s"
@@ -57,3 +57,12 @@ def save_image(img_obj, tree_obj):
         return url
     else:
         raise ValueError("Only image accepted.")
+
+
+def obtain_polygon_borders(polygon):
+    """Return polygon bounds."""
+    return polygon.points.aggregate(
+        lat_min=Min('latitude'),
+        lat_max=Max('latitude'),
+        lng_min=Min('longitude'),
+        lng_max=Max('longitude'),)

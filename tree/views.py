@@ -1,18 +1,20 @@
+from shapely.geometry import Polygon as SPolygon, Point as SPoint
 from django.shortcuts import render
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication, BaseAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser 
 from rest_framework.response import Response
 from rest_framework import generics
+from rest_framework import mixins
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework import exceptions as exc
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.db import IntegrityError
 
-from tree.models import Tree, TreeImages
+from tree.models import Tree, TreeImages, Polygon, PolyPoint
 from tree import serializers as ser
-from tree.helpers import get_range, save_image
+from tree.helpers import get_range, save_image, obtain_polygon_borders
 from tree import permissions as perm
 
 
@@ -60,6 +62,18 @@ class TreeDetailsReadOnlyView(generics.RetrieveAPIView):
         return super(TreeDetailsReadOnlyView, self).retrieve(request, pk, *args, **kwargs)
 
 
+class PolygonListCreateView(generics.ListCreateAPIView):
+    queryset = Polygon.objects.all()
+    serializer_class = ser.PolygonSerializer
+    permission_classes = (perm.IsAdminOrReadOnly, )
+
+
+class PolygonDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Polygon.objects.all()
+    serializer_class = ser.PolygonSerializer
+    permission_classes = (IsAdminUser, )
+
+
 class TreeImageCreateView(APIView):
     queryset = TreeImages.objects.all()
     serializer_class = ser.TreeImageSerializer
@@ -104,3 +118,27 @@ def confirm_tree(request, pk):
     else:
         tree.confirms.add(request.user)
     return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication, ))
+@permission_classes((IsAuthenticated, ))
+def obtain_trees_in_polygon(request, poly_pk):
+    try:
+        poly = Polygon.objects.get(pk=poly_pk)
+    except Exception:
+        return Response({'error': 'Wrong polygon ID.'},
+                        status=status.HTTP_400_BAD_REQUEST)
+    borders = obtain_polygon_borders(poly)
+    trees = Tree.objects.filter(latitude__lte=borders['lat_max'],
+                                latitude__gte=borders['lat_min'],
+                                longitude__lte=borders['lng_max'],
+                                longitude__gte=borders['lng_min'])
+    # filter trees to match polygon.
+    filter_poly = SPolygon([(p.latitude, p.longitude) for p in poly.points.all()])
+    def filter_func(tree):
+        """Inner function to filter tree by geo coordinates."""
+        return filter_poly.intersects(SPoint(tree.latitude, tree.longitude))
+    serializer = ser.TreeSerializer(filter(filter_func, trees), many=True)
+
+    return Response(serializer.data)

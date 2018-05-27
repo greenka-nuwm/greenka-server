@@ -1,12 +1,12 @@
 import os
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from tree.models import Tree, TreeType, TreeSort, TreeImages
+from tree import models
 
 
 class UserSerializer(serializers.ModelSerializer):
     trees = serializers.PrimaryKeyRelatedField(many=True,
-                                               queryset=Tree.objects.all())
+                                               queryset=models.Tree.objects.all())
 
     class Meta:
         model = User
@@ -18,7 +18,7 @@ class TreeImageSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
 
     class Meta:
-        model = TreeImages
+        model = models.TreeImages
         fields = ('url', )
 
     def get_url(self, image):
@@ -32,7 +32,7 @@ class TreeSerializer(serializers.ModelSerializer):
     confirms = serializers.SerializerMethodField()
 
     class Meta:
-        model = Tree
+        model = models.Tree
         exclude = ('active', )
         read_only = (
             'confirms',
@@ -40,3 +40,32 @@ class TreeSerializer(serializers.ModelSerializer):
 
     def get_confirms(self, tree):
         return tree.confirms.all().count()
+
+
+class PolyPointSerializer(serializers.ModelSerializer):
+    poly = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = models.PolyPoint
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        if 'as_nested' in kwargs:
+            kwargs.pop('as_nested')
+            self.fields.pop('poly')
+        super(PolyPointSerializer, self).__init__(*args, **kwargs)
+
+
+class PolygonSerializer(serializers.ModelSerializer):
+    points = PolyPointSerializer(many=True, as_nested=True)
+
+    class Meta:
+        model = models.Polygon
+        fields = "__all__"
+
+    def create(self, validated_data):
+        points = validated_data.pop('points')
+        polygon = models.Polygon.objects.create(**validated_data)
+        for point in points:
+            models.PolyPoint.objects.create(poly=polygon, **point)
+        return polygon

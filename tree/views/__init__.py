@@ -9,12 +9,3 @@ from tree.views.poly_views import *
 from tree.views.sort_views import *
 from tree.views.type_views import *
 from tree.views.tree_views import *
-
-
-@api_view(['GET'])
-@authentication_classes((TokenAuthentication, ))
-@permission_classes((IsAuthenticated, ))
-def get_user(request):
-    """Return info about self."""
-    serializer = UserSerializer(request.user)
-    return Response(serializer.data)

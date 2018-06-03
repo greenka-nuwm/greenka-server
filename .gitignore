@@ -3,6 +3,7 @@
 *.db
 *.conf
 img/
+static/
 
 
 # Byte-compiled / optimized / DLL files

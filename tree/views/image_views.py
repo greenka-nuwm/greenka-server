@@ -6,7 +6,7 @@ from rest_framework import exceptions as exc
 from rest_framework import status
 from django.db import IntegrityError
 
-from tree.models import TreeImages
+from tree.models import TreeImages, Tree
 from tree.permissions import IsTreeImageTreeOwner
 from tree.serializers import TreeImageSerializer
 from tree.helpers import save_image

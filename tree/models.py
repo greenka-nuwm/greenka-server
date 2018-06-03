@@ -10,20 +10,20 @@ def get_sentinel_user():
 
 class TreeType(models.Model):
     """Type of tree."""
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
 
 
 class TreeSort(models.Model):
     """Sort of tree, also know about itself type."""
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
     tree_type = models.ForeignKey('TreeType',
                                   on_delete=models.CASCADE)
 
 
 class Tree(models.Model):
     """Tree object."""
-    (HEALTHY, DRY, BROKEN,
-     TOPING, MISTLETOE, DYING, ) = range(6)
+    STATE_IDS = (HEALTHY, DRY, BROKEN,
+                 TOPING, MISTLETOE, DYING, ) = range(6)
 
     STATES = (
         (HEALTHY, 'HEALTHY'),
@@ -58,6 +58,8 @@ class Tree(models.Model):
     approved = models.BooleanField(default=False)
     confirms = models.ManyToManyField(User)
 
+    class Meta:
+        unique_together = ('latitude', 'longitude', )
 
 class TreeImages(models.Model):
     """Contain path to image attached to specific tree."""

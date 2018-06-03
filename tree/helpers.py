@@ -22,11 +22,11 @@ class Radians(Func):
     function = 'RADIANS'
 
 
-def get_range(model, latitude, longitude, outer_border, inner_border=0):
+def get_range(queryset, latitude, longitude, outer_border, inner_border=0):
     """Return range query.
 
     :params:
-        -`model`: Model class.
+        -`queryset`: Queryset object.
         -`latitude`: center latitude.
         -`longitude`: center longitude.
         -`outer_border`: maximum filtered range.
@@ -41,7 +41,7 @@ def get_range(model, latitude, longitude, outer_border, inner_border=0):
         Cos(Radians(F('longitude')) - Radians(longitude)) +
         Sin(Radians(latitude)) * Sin(Radians(F('latitude'))))
 
-    query = model.objects.annotate(distance=query_expression)
+    query = queryset.annotate(distance=query_expression)
     query = query.filter(distance__range=(inner_border, outer_border))
     query = query.filter(distance__lt=outer_border)
     query = query.order_by('distance')

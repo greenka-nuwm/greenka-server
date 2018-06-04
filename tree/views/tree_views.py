@@ -95,3 +95,12 @@ def set_approve_tree(request, pk):
     tree.approved = request.data.get('approved', False)
     tree.save()
     return Response({'approved': tree.approved})
+
+
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication, ))
+def get_tree_states(request):
+    """Return all possible states of tree."""
+    result = [{'id': pk, 'name': name}
+              for pk, name in zip(Tree.STATE_IDS, Tree.STATE_STRS)]
+    return Response(result)

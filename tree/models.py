@@ -25,6 +25,11 @@ class Tree(models.Model):
     STATE_IDS = (HEALTHY, DRY, BROKEN,
                  TOPING, MISTLETOE, DYING, ) = range(6)
 
+    STATE_STRS = (
+        'Здорове', 'Пошкоджене', 'Помирає',
+        'Напівсухе та сухе', 'Топінг', 'Вражене омелою'
+    )
+
     STATES = (
         (HEALTHY, 'HEALTHY'),
         (DRY, 'DRY'),

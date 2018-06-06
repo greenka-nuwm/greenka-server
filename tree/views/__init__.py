@@ -3,7 +3,6 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from tree.serializers import UserSerializer
 from tree.views.image_views import *
 from tree.views.poly_views import *
 from tree.views.sort_views import *

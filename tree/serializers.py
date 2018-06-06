@@ -4,16 +4,6 @@ from rest_framework import serializers
 from tree import models
 
 
-class UserSerializer(serializers.ModelSerializer):
-    trees = serializers.PrimaryKeyRelatedField(many=True,
-                                               queryset=models.Tree.objects.all())
-
-    class Meta:
-        model = User
-        exclude = ('password', 'user_permissions', 'is_active', 'last_login', )
-        depth = 1
-
-
 class TreeImageSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
 

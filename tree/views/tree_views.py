@@ -10,7 +10,6 @@ from django.shortcuts import get_object_or_404
 from tree.serializers import TreeSerializer
 from tree.models import Tree
 from tree.filters import chain_filter_it, TreeFilterException
-from tree.helpers import get_range
 
 
 @api_view(['GET'])

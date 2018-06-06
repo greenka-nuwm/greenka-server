@@ -9,7 +9,7 @@ from django.db import IntegrityError
 from tree.models import TreeImages, Tree
 from tree.permissions import IsTreeImageTreeOwner
 from tree.serializers import TreeImageSerializer
-from tree.helpers import save_image
+from greenka.helpers import save_image
 
 
 class TreeImageCreateView(APIView):

@@ -66,6 +66,7 @@ class Tree(models.Model):
     class Meta:
         unique_together = ('latitude', 'longitude', )
 
+
 class TreeImages(models.Model):
     """Contain path to image attached to specific tree."""
     url = models.ImageField(upload_to="static/img", max_length=128, unique=True)

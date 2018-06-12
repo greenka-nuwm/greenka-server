@@ -66,3 +66,10 @@ class TreeGETSerializer(TreeSerializer):
     """Overriding for GET request types."""
     tree_sort = TreeSortSerializer(read_only=True)
     tree_type = TreeTypeSerializer(read_only=True)
+
+
+class TreeGETShortSerializer(TreeSerializer):
+
+    class Meta:
+        model = models.Tree
+        fields = ('id', 'tree_state', 'latitude', 'longitude', )

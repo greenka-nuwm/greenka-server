@@ -30,3 +30,10 @@ class PolygonSerializer(serializers.ModelSerializer):
         for point in points:
             models.PolyPoint.objects.create(poly=polygon, **point)
         return polygon
+
+
+class PolygonGETSerializer(PolygonSerializer):
+
+    class Meta:
+        model = models.Polygon
+        fields = ('id', 'name', )

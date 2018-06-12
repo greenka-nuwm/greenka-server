@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 
-from tree.serializers import TreeSerializer, TreeGETSerializer
+from tree.serializers import TreeSerializer, TreeGETSerializer, TreeGETShortSerializer
 from tree.models import Tree
 from tree.filters import chain_filter_it, TreeFilterException
 from tree.permissions import IsAdminTreeOwnerOrReadOnly
@@ -43,7 +43,7 @@ def get_trees(request):
     except TreeFilterException as error:
         return Response({'message': error.message},
                         status=error.status)
-    serializer = TreeGETSerializer(result, many=True)
+    serializer = TreeGETShortSerializer(result, many=True)
     return Response(serializer.data)
 
 

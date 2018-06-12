@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-APPEND_SLASH = True
+APPEND_SLASH = False
 
 # Application definition
 
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'tree',
     'problems',
     'gauth',
+    'polygon',
 ]
 
 MIDDLEWARE = [

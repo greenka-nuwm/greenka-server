@@ -8,7 +8,8 @@ from shapely.geometry import Point as SPoint
 from shapely.geometry import Polygon as SPolygon
 
 from greenka.helpers import get_range, obtain_polygon_borders
-from tree.models import Polygon, Tree
+from tree.models import Tree
+from polygon.models import Polygon
 
 
 class TreeFilterException(Exception):
@@ -83,6 +84,7 @@ def chain_filter_sort(request, queryset):
         tree_sort = literal_eval(tree_sort)
         if not isinstance(tree_sort, Iterable) or isinstance(tree_sort, str):
             raise ValueError()
+        tree_sort = map(int, tree_sort)
     except ValueError:
         raise TreeFilterException('Failed to parse `sort` argument.'
                                   'Use array/list [1, 2, 3] format.')

@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from tree.views.image_views import *
-from tree.views.poly_views import *
 from tree.views.sort_views import *
 from tree.views.type_views import *
 from tree.views.tree_views import *

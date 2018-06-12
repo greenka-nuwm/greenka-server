@@ -30,7 +30,7 @@ class Problem(models.Model):
     problem_state = models.ForeignKey(ProblemState, blank=False, null=False, on_delete=models.CASCADE)
 
     is_active = models.BooleanField(default=True)
-    approved = models.BooleanField(default=True)
+    approved = models.BooleanField(default=False)
     confirms = models.ManyToManyField(User, 'confirms')
 
     reporter = models.ForeignKey(User, blank=False, null=False, on_delete=models.CASCADE)

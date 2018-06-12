@@ -1,9 +1,9 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
 
-from tree.models import Polygon
+from polygon.models import Polygon
 from tree.permissions import IsAdminOrReadOnly
-from tree.serializers import PolygonSerializer
+from polygon.serializers import PolygonSerializer
 
 
 class PolygonListCreateView(generics.ListCreateAPIView):

@@ -49,7 +49,7 @@ def chain_filter_radius(request, queryset):
 
 def chain_filter_problem_type(request, queryset):
     problem_type = request.GET.get('type')
-    if not problem_type
+    if not problem_type:
         return queryset
 
     try:
@@ -67,7 +67,7 @@ def chain_filter_problem_type(request, queryset):
 
 def chain_filter_problem_state(request, queryset):
     problem_state = request.GET.get('state')
-    if not problem_state
+    if not problem_state:
         return queryset
 
     try:

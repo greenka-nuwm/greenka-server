@@ -22,3 +22,14 @@ class IsAdminOrReadOnly(permissions.IsAdminUser):
         if request.method in permissions.SAFE_METHODS:
             return True
         return super(IsAdminOrReadOnly, self).has_permission(request, view)
+
+
+class IsAdminTreeOwnerOrReadOnly(permissions.BasePermission):
+    """Admin and tree owner can edit tree, otherwise only view"""
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        if request.user and request.user.is_staff or request.user == obj.owner:
+                return True
+        return False

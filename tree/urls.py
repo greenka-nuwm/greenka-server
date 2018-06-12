@@ -2,15 +2,7 @@ import tree.views as tree_views
 
 from django.contrib import admin
 from django.urls import include, path, register_converter
-from tree.converters import FloatConverter
 
-
-register_converter(FloatConverter, 'float')
-
-poly = [
-    path(r'', tree_views.PolygonListCreateView.as_view()),
-    path(r'<int:pk>', tree_views.PolygonDetailsView.as_view()),
-]
 
 types = [
     path(r'', tree_views.TreeTypeListCreateView.as_view()),
@@ -23,7 +15,6 @@ sorts = [
 ]
 
 urlpatterns = [
-    path('poly/', include(poly)),
     path('types/', include(types)),
     path('sorts/', include(sorts)),
     path('states/', tree_views.get_tree_states),

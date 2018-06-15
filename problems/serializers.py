@@ -26,7 +26,6 @@ class ProblemPhotoSerializer(serializers.ModelSerializer):
 
 
 class ProblemSerializer(serializers.ModelSerializer):
-    name = serializers.ReadOnlyField()
     problem_state = serializers.ReadOnlyField(source='problem_state.id')
     problem_state_name = serializers.ReadOnlyField(source='problem_state.verbose_name')
     reporter = serializers.ReadOnlyField(source='reporter.id')

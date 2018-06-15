@@ -11,10 +11,8 @@ class PolygonListCreateView(generics.ListCreateAPIView):
     permission_classes = (IsAdminOrReadOnly, )
 
     def get_serializer_class(self):
-        return PolygonGETSerializer
-        # if self.request.method == 'GET':
-        #     return PolygonGETSerializer
-        # else:
+        if self.request.method == 'GET':
+            return PolygonGETSerializer
         return PolygonSerializer
 
 

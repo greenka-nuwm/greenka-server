@@ -20,9 +20,6 @@ class ProblemState(models.Model):
 
 class Problem(models.Model):
     """Problem object class."""
-    name = models.CharField(max_length=64, unique=True)
-    verbose_name = models.CharField(max_length=128, unique=True)
-
     latitude = models.FloatField()
     longitude = models.FloatField()
 
@@ -38,7 +35,7 @@ class Problem(models.Model):
     creation_time = models.DateTimeField(auto_now_add=True)
     modification_time = models.DateTimeField(auto_now=True)
 
-    description = models.TextField(max_length=4096)
+    description = models.TextField(max_length=4096, blank=True, null=True)
 
 
 class ProblemPhoto(models.Model):

@@ -58,7 +58,7 @@ class ProblemView(generics.ListCreateAPIView):
         return Response(serializer.data)
 
     def perform_create(self, serializer):
-        serializer.save(reporter=self.request.user, name=uuid4(),
+        serializer.save(reporter=self.request.user,
                         problem_state=ProblemState.objects.get(pk=1))
 
 

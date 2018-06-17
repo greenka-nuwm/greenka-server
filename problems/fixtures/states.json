@@ -1,0 +1,37 @@
+[{
+    "model": "problems.problemstate",
+    "pk": 1,
+    "fields": {
+        "name": "open",
+        "verbose_name": "\u0412\u0456\u0434\u043a\u0440\u0438\u0442\u0430",
+        "description": "\u041f\u0440\u043e\u0431\u043b\u0435\u043c\u0430 \u0434\u043e\u0434\u0430\u043d\u0430, \u0430\u043b\u0435 \u0449\u0435 \u043d\u0435 \u0440\u043e\u0437\u0433\u043b\u044f\u0434\u0430\u0454\u0442\u044c\u0441\u044f",
+        "is_active": true
+    }
+}, {
+    "model": "problems.problemstate",
+    "pk": 2,
+    "fields": {
+        "name": "in-progress",
+        "verbose_name": "\u0412 \u0440\u043e\u0431\u043e\u0442\u0456",
+        "description": "\u0412\u0438\u0440\u0456\u0448\u0435\u043d\u043d\u044f\u043c \u043f\u0440\u043e\u0431\u043b\u0435\u043c\u0438 \u0437\u0430\u0439\u043c\u0430\u044e\u0442\u044c\u0441\u044f",
+        "is_active": true
+    }
+}, {
+    "model": "problems.problemstate",
+    "pk": 3,
+    "fields": {
+        "name": "done",
+        "verbose_name": "\u0412\u0438\u0440\u0456\u0448\u0435\u043d\u043e",
+        "description": "\u041f\u0440\u043e\u0431\u043b\u0435\u043c\u0443 \u0432\u0438\u0440\u0456\u0448\u0435\u043d\u043e.",
+        "is_active": true
+    }
+}, {
+    "model": "problems.problemstate",
+    "pk": 4,
+    "fields": {
+        "name": "refused",
+        "verbose_name": "\u0412\u0456\u0434\u043c\u043e\u0432\u043b\u0435\u043d\u043e",
+        "description": "\u0423 \u0432\u0438\u0440\u0456\u0448\u0435\u043d\u043d\u0456 \u043f\u0440\u043e\u0431\u043b\u0435\u043c\u0438 \u0432\u0456\u0434\u043c\u043e\u0432\u043b\u0435\u043d\u043e.",
+        "is_active": true
+    }
+}]

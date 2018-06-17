@@ -12,12 +12,18 @@ class TreeType(models.Model):
     """Type of tree."""
     name = models.CharField(max_length=64, unique=True)
 
+    class Meta:
+        db_table = 'tree_type'
+
 
 class TreeSort(models.Model):
     """Sort of tree, also know about itself type."""
     name = models.CharField(max_length=128, unique=True)
     tree_type = models.ForeignKey('TreeType',
                                   on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'tree_sort'
 
 
 class Tree(models.Model):
@@ -64,6 +70,7 @@ class Tree(models.Model):
     confirms = models.ManyToManyField(User)
 
     class Meta:
+        db_table = 'tree'
         unique_together = ('latitude', 'longitude', )
 
 
@@ -75,3 +82,6 @@ class TreeImages(models.Model):
 
     def __str__(self):
         return '/' + str(self.url.path)
+
+    class Meta:
+        db_table = 'tree_image'

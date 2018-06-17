@@ -9,6 +9,9 @@ class ProblemType(models.Model):
     description = models.TextField(max_length=4096)
     is_active = models.BooleanField(default=True)
 
+    class Meta:
+        db_table = 'problem_type'
+
 
 class ProblemState(models.Model):
     """Object that represents problem state."""
@@ -16,6 +19,9 @@ class ProblemState(models.Model):
     verbose_name = models.CharField(max_length=128, unique=True)
     description = models.TextField(max_length=4096)
     is_active = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = 'problem_state'
 
 
 class Problem(models.Model):
@@ -37,9 +43,16 @@ class Problem(models.Model):
 
     description = models.TextField(max_length=4096, blank=True, null=True)
 
+    class Meta:
+        db_table = 'problem'
+        unique_together = ('latitude', 'longitude', )
+
 
 class ProblemImage(models.Model):
     """Image object for problems."""
     url = models.ImageField(upload_to="static/img", max_length=128, unique=True)
     problem = models.ForeignKey(Problem, blank=False, null=False, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = 'problem_image'

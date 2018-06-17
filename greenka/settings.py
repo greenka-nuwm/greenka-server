@@ -25,7 +25,7 @@ SECRET_KEY = ')jn9lsg)vgit!k65^osmx!g@mansg1ol=@++zf9!(&&)7vz50x'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 APPEND_SLASH = False
 
@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'problems',
     'gauth',
     'polygon',
+    'oauth2_provider',
+    'social_django',
+    'rest_framework_social_oauth2',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +72,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -96,8 +101,17 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
     )
 }
+
+AUTHENTICATION_BACKENDS = (
+    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.facebook.FacebookAppOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -139,4 +153,16 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ['static',]
 
-TREE_IMAGE_SAVE_PATH = 'static'
+TREE_IMAGE_SAVE_PATH = 'static/trees/'
+PROBLEM_IMAGE_SAVE_PATH = 'static/problems/'
+
+
+# Facebook configuration
+SOCIAL_AUTH_FACEBOOK_KEY = '261012791127361'
+SOCIAL_AUTH_FACEBOOK_SECRET = 'fdba39926d30473061855364cf36f51e'
+
+# Define SOCIAL_AUTH_FACEBOOK_SCOPE to get extra permissions from facebook. Email is not sent by default, to get it, you must request the email permission:
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id, name, email'
+}

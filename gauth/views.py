@@ -1,12 +1,17 @@
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth.models import UserManager
-from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import (api_view, authentication_classes,
+                                       permission_classes)
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 
 from gauth.serializers import UserSerializer
+from problems.models import Problem
+from problems.serializers import ProblemSerializer
+from tree.models import Tree
+from tree.serializers import TreeGETSerializer
 
 
 @api_view(['POST'])
@@ -29,7 +34,27 @@ def register(request):
 @api_view(['GET'])
 @authentication_classes((TokenAuthentication, ))
 @permission_classes((IsAuthenticated, ))
-def get_self(request):
+def get_self_profile(request):
     """Return info about self. No additional params need."""
     serializer = UserSerializer(request.user)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication, ))
+@permission_classes((IsAuthenticated, ))
+def get_self_trees(request):
+    """Return all trees reported by user."""
+    serializer = TreeGETSerializer(Tree.objects.filter(owner=request.user),
+                                   many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication, ))
+@permission_classes((IsAuthenticated, ))
+def get_self_problems(request):
+    """Return all problems reported by user."""
+    serializer = ProblemSerializer(Problem.objects.filter(reporter=request.user),
+                                   many=True)
     return Response(serializer.data)

@@ -28,4 +28,5 @@ urlpatterns = [
     path(r'problems/', include('problems.urls')),
     path(r'polygons/', include('polygon.urls')),
     path(r'token/', views.obtain_auth_token),
+    path(r'auth/', include('rest_framework_social_oauth2.urls')),
 ]

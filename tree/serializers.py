@@ -12,7 +12,7 @@ class TreeImageSerializer(serializers.ModelSerializer):
         fields = ('url', )
 
     def get_url(self, image):
-        return os.sep + str(image.url)
+        return '/' + str(image.url)
 
 
 class TreeSortSerializer(serializers.ModelSerializer):
@@ -72,4 +72,4 @@ class TreeGETShortSerializer(TreeSerializer):
 
     class Meta:
         model = models.Tree
-        fields = ('id', 'tree_state', 'latitude', 'longitude', )
+        fields = ('id', 'tree_state', 'latitude', 'longitude', 'distance', )

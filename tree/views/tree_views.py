@@ -5,6 +5,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.exceptions import NotAuthenticated, PermissionDenied
 from django.shortcuts import get_object_or_404
 
 from tree.serializers import TreeSerializer, TreeGETSerializer, TreeGETShortSerializer
@@ -13,10 +14,10 @@ from tree.filters import chain_filter_it, TreeFilterException
 from tree.permissions import IsAdminTreeOwnerOrReadOnly
 
 
-@api_view(['GET'])
-@authentication_classes((TokenAuthentication, ))
-def get_trees(request):
+class TreeView(generics.ListCreateAPIView):
     """# Main function to fetch trees.
+
+    get:
 
     __To filter by distance__, use both params `radius:float`
     and `center:float,float`.
@@ -37,21 +38,31 @@ def get_trees(request):
     and `int`,`int` to specify min and max.
 
     __To filter by state__, use `state:array(int)`.
+
+
+    post:
+    Create new tree on map.
     """
-    try:
-        result = chain_filter_it(request, Tree.objects.all())
-    except TreeFilterException as error:
-        return Response({'message': error.message},
-                        status=error.status)
-    serializer = TreeGETShortSerializer(result, many=True)
-    return Response(serializer.data)
-
-
-class TreeAddView(generics.CreateAPIView):
-    """Create new tree on map."""
     queryset = Tree.objects.all()
     serializer_class = TreeSerializer
-    permission_classes = (IsAuthenticated, )
+    authentication_classes = (TokenAuthentication, )
+
+    def post(self, request, *args, **kwargs):
+        if not IsAuthenticated().has_permission(request, self):
+            raise NotAuthenticated()
+        return super(TreeView, self).post(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        try:
+            queryset = self.get_queryset()
+            if not IsAdminUser().has_permission(request, self):
+                queryset = queryset.filter(is_active=True)
+            result = chain_filter_it(request, queryset)
+        except TreeFilterException as error:
+            return Response({'message': error.message},
+                            status=error.status)
+        serializer = TreeGETShortSerializer(result, many=True)
+        return Response(serializer.data)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

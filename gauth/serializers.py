@@ -5,8 +5,6 @@ from tree import models
 
 
 class UserSerializer(serializers.ModelSerializer):
-    trees = serializers.PrimaryKeyRelatedField(many=True, required=False,
-                                               queryset=models.Tree.objects.all())
 
     class Meta:
         model = User

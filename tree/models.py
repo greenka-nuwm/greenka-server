@@ -23,7 +23,7 @@ class TreeSort(models.Model):
 class Tree(models.Model):
     """Tree object."""
     STATE_IDS = (HEALTHY, DRY, BROKEN,
-                 TOPING, MISTLETOE, DYING, ) = range(6)
+                 TOPING, MISTLETOE, DYING, ) = range(1, 7)
 
     STATE_STRS = (
         'Здорове', 'Пошкоджене', 'Помирає',

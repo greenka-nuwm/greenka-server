@@ -38,7 +38,7 @@ class Problem(models.Model):
     description = models.TextField(max_length=4096, blank=True, null=True)
 
 
-class ProblemPhoto(models.Model):
+class ProblemImage(models.Model):
     """Image object for problems."""
     url = models.ImageField(upload_to="static/img", max_length=128, unique=True)
     problem = models.ForeignKey(Problem, blank=False, null=False, on_delete=models.CASCADE)

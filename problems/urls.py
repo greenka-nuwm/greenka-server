@@ -14,7 +14,8 @@ types = [
 
 urlpatterns = [
     path('', views.ProblemView.as_view()),
-    path('<int:pk>/', views.ProblemRUDView.as_view()),
     path('types/', include(types)),
     path('states/', include(states)),
+    path('<int:pk>/', views.ProblemRUDView.as_view()),
+    path('<int:pk>/image/', views.ProblemImageCreateView.as_view()),
 ]

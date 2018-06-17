@@ -9,7 +9,7 @@ from django.db import IntegrityError
 from tree.models import TreeImages, Tree
 from tree.permissions import IsTreeImageTreeOwner
 from tree.serializers import TreeImageSerializer
-from greenka.helpers import save_image
+from greenka.helpers import save_tree_image
 
 
 class TreeImageCreateView(APIView):
@@ -34,7 +34,7 @@ class TreeImageCreateView(APIView):
             return Response({'error': 'No `img` data found.'},
                             status=status.HTTP_400_BAD_REQUEST)
         # save image data on disk
-        url = save_image(img, tree_obj)
+        url = save_tree_image(img, tree_obj)
         serializer = TreeImageSerializer(data={})
         if serializer.is_valid():
             try:

@@ -1,3 +1,4 @@
+import os
 from uuid import uuid4
 from rest_framework import serializers
 
@@ -18,11 +19,15 @@ class ProblemTypeSerializer(serializers.ModelSerializer):
         exclude = ('is_active', )
 
 
-class ProblemPhotoSerializer(serializers.ModelSerializer):
+class ProblemImageSerializer(serializers.ModelSerializer):
+    url = serializers.SerializerMethodField()
 
     class Meta:
-        model = models.ProblemPhoto
+        model = models.ProblemImage
         exclude = ('is_active', )
+
+    def get_url(self, image):
+        return os.sep + str(image.url)
 
 
 class ProblemSerializer(serializers.ModelSerializer):
@@ -30,7 +35,7 @@ class ProblemSerializer(serializers.ModelSerializer):
     problem_state_name = serializers.ReadOnlyField(source='problem_state.verbose_name')
     reporter = serializers.ReadOnlyField(source='reporter.id')
     confirms = serializers.SerializerMethodField()
-    photos = ProblemPhotoSerializer(many=True, read_only=True)
+    images = ProblemImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Problem

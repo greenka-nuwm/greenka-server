@@ -63,9 +63,12 @@ class ProblemSerializer(serializers.ModelSerializer):
         return problem.confirms.all().count()
 
 
-class ProblemGETSerializer(serializers.ModelSerializer):
+class ProblemGETSerializer(ProblemSerializer):
     problem_state = ProblemStateShortSerializer(read_only=True)
     problem_type = ProblemTypeShortSerializer(read_only=True)
+
+
+class ProblemGETShortSerializer(ProblemGETSerializer):
 
     class Meta:
         model = models.Problem

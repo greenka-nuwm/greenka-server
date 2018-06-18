@@ -47,7 +47,7 @@ class ProblemView(generics.ListCreateAPIView):
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
-            return serializers.ProblemGETSerializer
+            return serializers.ProblemGETShortSerializer
         return serializers.ProblemSerializer
 
 
@@ -79,6 +79,11 @@ class ProblemRUDView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.ProblemSerializer
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAdminOrReporterOrReadOnly, )
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return serializers.ProblemGETSerializer
+        return serializers.ProblemSerializer
 
 
 class ProblemTypeView(generics.ListCreateAPIView):

@@ -75,8 +75,7 @@ class TreeDetailsReadOnlyView(generics.RetrieveUpdateDestroyAPIView):
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return TreeGETSerializer
-        else:
-            return TreeSerializer
+        return TreeSerializer
 
     def retrieve(self, request, pk, *args, **kwargs):
         return super(TreeDetailsReadOnlyView, self).retrieve(request, pk, *args, **kwargs)

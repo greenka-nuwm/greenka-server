@@ -11,12 +11,25 @@ class ProblemStateSerializer(serializers.ModelSerializer):
         model = models.ProblemState
         exclude = ("is_active", )
 
+class ProblemStateShortSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.ProblemState
+        exclude = ('is_active', 'description', 'id', )
+
 
 class ProblemTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ProblemType
         exclude = ('is_active', )
+
+
+class ProblemTypeShortSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.ProblemType
+        exclude = ('is_active', 'description', 'id', )
 
 
 class ProblemImageSerializer(serializers.ModelSerializer):
@@ -48,3 +61,12 @@ class ProblemSerializer(serializers.ModelSerializer):
 
     def get_confirms(self, problem):
         return problem.confirms.all().count()
+
+
+class ProblemGETSerializer(serializers.ModelSerializer):
+    problem_state = ProblemStateShortSerializer(read_only=True)
+    problem_type = ProblemTypeShortSerializer(read_only=True)
+
+    class Meta:
+        model = models.Problem
+        fields = ('id', 'latitude', 'longitude', 'problem_type', 'problem_state', )

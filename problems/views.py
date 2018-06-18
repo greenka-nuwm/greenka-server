@@ -45,6 +45,12 @@ class ProblemView(generics.ListCreateAPIView):
     serializer_class = serializers.ProblemSerializer
     authentication_classes = (TokenAuthentication, )
 
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return serializers.ProblemGETSerializer
+        return serializers.ProblemSerializer
+
+
     def post(self, request, *args, **kwargs):
         if not IsAuthenticated().has_permission(request, self):
             raise NotAuthenticated()
@@ -58,7 +64,8 @@ class ProblemView(generics.ListCreateAPIView):
             result = chain_filter_it(request, queryset)
         except ProblemFilterException as error:
             return Response({'message': error.message})
-        serializer = serializers.ProblemSerializer(result, many=True)
+        print(self.get_serializer(result, many=True))
+        serializer = self.get_serializer(result, many=True)
         return Response(serializer.data)
 
     def perform_create(self, serializer):

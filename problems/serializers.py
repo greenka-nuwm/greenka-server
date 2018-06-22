@@ -65,6 +65,7 @@ class ProblemSerializer(serializers.ModelSerializer):
 
 class ProblemGETSerializer(ProblemSerializer):
     problem_state = ProblemStateShortSerializer(read_only=True)
+    problem_state_name = None
     problem_type = ProblemTypeShortSerializer(read_only=True)
 
 

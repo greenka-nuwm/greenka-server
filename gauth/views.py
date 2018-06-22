@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 from gauth.serializers import UserSerializer
 from problems.models import Problem
-from problems.serializers import ProblemSerializer
+from problems.serializers import ProblemGETSerializer
 from tree.models import Tree
 from tree.serializers import TreeGETSerializer
 
@@ -55,6 +55,6 @@ def get_self_trees(request):
 @permission_classes((IsAuthenticated, ))
 def get_self_problems(request):
     """Return all problems reported by user."""
-    serializer = ProblemSerializer(Problem.objects.filter(reporter=request.user),
+    serializer = ProblemGETSerializer(Problem.objects.filter(reporter=request.user),
                                    many=True)
     return Response(serializer.data)

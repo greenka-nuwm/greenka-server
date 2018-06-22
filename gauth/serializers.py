@@ -8,8 +8,16 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        exclude = ('password', 'user_permissions', 'is_active', 'last_login', )
+        exclude = ('user_permissions', 'is_active', 'last_login', )
         depth = 1
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
+
+
+class UserGETSerializer(UserSerializer):
+
+    class Meta:
+        model = User
+        exclude = ('password', 'user_permissions', 'is_active', 'last_login', )
+        depth = 1

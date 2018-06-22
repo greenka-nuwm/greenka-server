@@ -6,5 +6,5 @@ urlpatterns = [
     path('self/profile/', views.get_self_profile),
     path('self/trees/', views.get_self_trees),
     path('self/problems/', views.get_self_problems),
-    path('register', views.register),
+    path('register/', views.register),
 ]

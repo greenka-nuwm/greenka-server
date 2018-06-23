@@ -7,4 +7,5 @@ urlpatterns = [
     path('self/trees/', views.get_self_trees),
     path('self/problems/', views.get_self_problems),
     path('register/', views.register),
+    path('feedback/', views.FeedbackView.as_view()),
 ]

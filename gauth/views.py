@@ -1,5 +1,6 @@
 from django.contrib.auth.models import UserManager
 from rest_framework import status
+from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import (api_view, authentication_classes,
@@ -7,7 +8,8 @@ from rest_framework.decorators import (api_view, authentication_classes,
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from gauth.serializers import UserSerializer
+from gauth.serializers import UserSerializer, FeedbackSerializer
+from gauth.models import Feedback
 from problems.models import Problem
 from problems.serializers import ProblemGETSerializer
 from tree.models import Tree
@@ -58,3 +60,13 @@ def get_self_problems(request):
     serializer = ProblemGETSerializer(Problem.objects.filter(reporter=request.user),
                                    many=True)
     return Response(serializer.data)
+
+
+class FeedbackView(generics.ListCreateAPIView):
+    """View to leave feedback and watch own leaved feedbacks."""
+    queryset = Feedback.objects.filter(is_active=True)
+    serializer_class = FeedbackSerializer
+    permission_classes = (IsAuthenticated, )
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)

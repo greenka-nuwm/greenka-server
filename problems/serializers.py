@@ -37,10 +37,10 @@ class ProblemImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ProblemImage
-        exclude = ('is_active', )
+        fields = ('url', )
 
     def get_url(self, image):
-        return os.sep + str(image.url)
+        return '/' + str(image.url)
 
 
 class ProblemSerializer(serializers.ModelSerializer):

@@ -66,7 +66,7 @@ def save_tree_image(img_obj, tree_obj):
 
 def save_problem_image(img_obj, problem_obj):
     url = os.path.join(settings.PROBLEM_IMAGE_SAVE_PATH,
-                       PROBLEM_SAVE_FORMAT % {'pk': problem_obj.pk, 'name': img_obj.name})
+                       IMAGE_SAVE_FORMAT % {'pk': problem_obj.pk, 'name': img_obj.name})
     if img_obj.content_type.startswith('image/'):
         with open(url, 'wb') as out_file:
             out_file.write(img_obj.read())

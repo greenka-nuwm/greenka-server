@@ -18,6 +18,6 @@ class IsProblemReporterOrAdminOrReadOnly(permissions.IsAdminUser):
     def has_object_permission(self, request, view, obj):
         if request in permissions.SAFE_METHODS:
             return True
-        if obj.problem.reporter == request.user:
+        if obj.reporter == request.user:
             return True
         return super(IsProblemReportedOrAdminOrReadOnly).has_object_permission(self, request, view, obj)

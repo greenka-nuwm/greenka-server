@@ -160,7 +160,7 @@ class ProblemImageCreateView(APIView):
         serializer = serializers.ProblemImageSerializer(data={})
         if serializer.is_valid():
             try:
-                serializer.save(url=url, visible=True, tree=problem_obj)
+                serializer.save(url=url, is_active=True, problem=problem_obj)
             except IntegrityError:
                 return Response({'error': 'This image already exists.'},
                                 status=status.HTTP_400_BAD_REQUEST)

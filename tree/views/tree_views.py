@@ -69,7 +69,7 @@ class TreeView(generics.ListCreateAPIView):
 
 
 class TreeDetailsReadOnlyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Tree.objects.filter(active__exact=True)
+    queryset = Tree.objects.filter(is_active=True)
     permission_classes = (IsAdminTreeOwnerOrReadOnly, )
 
     def get_serializer_class(self):

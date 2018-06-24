@@ -39,7 +39,7 @@ class TreeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Tree
-        exclude = ('active', )
+        exclude = ('is_active', )
         read_only = (
             'confirms',
         )

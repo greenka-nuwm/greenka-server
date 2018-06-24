@@ -63,7 +63,7 @@ class Tree(models.Model):
                               related_name='trees',
                               on_delete=models.SET(get_sentinel_user))
 
-    active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
     visible = models.BooleanField(default=True)
 
     approved = models.BooleanField(default=False)

@@ -1,3 +1,5 @@
+!apache-greenka.conf
+
 .vscode/
 *.sqlite3
 *.db

@@ -8,7 +8,7 @@ from rest_framework.decorators import (api_view, authentication_classes,
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from gauth.serializers import UserSerializer, FeedbackSerializer
+from gauth.serializers import UserSerializer, FeedbackSerializer, UserGETSerializer
 from gauth.models import Feedback
 from problems.models import Problem
 from problems.serializers import ProblemGETSerializer
@@ -38,7 +38,7 @@ def register(request):
 @permission_classes((IsAuthenticated, ))
 def get_self_profile(request):
     """Return info about self. No additional params need."""
-    serializer = UserSerializer(request.user)
+    serializer = UserGETSerializer(request.user)
     return Response(serializer.data)
 
 

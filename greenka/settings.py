@@ -155,6 +155,7 @@ STATICFILES_DIRS = ['static',]
 
 TREE_IMAGE_SAVE_PATH = 'static/trees/'
 PROBLEM_IMAGE_SAVE_PATH = 'static/problems/'
+FEEDBACK_IMAGE_SAVE_PATH = 'static/feedbacks/'
 
 
 # Facebook configuration

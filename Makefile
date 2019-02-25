@@ -43,6 +43,7 @@ install-apache-conf:
 
 install-source:
 	@echo "installing greenka source"
+	@./manage.py collectstatic
 	@mkdir -p /opt/greenka
 	@cp -r * /opt/greenka/.
 	@chmod -r $(APACHE_USER):$(APACHE_USER) /opt/greenka
@@ -50,4 +51,4 @@ install-source:
 install: certificates install-source install-apache-conf 
 
 migrate:
-	@python manage.py migrate
+	@./manage.py migrate

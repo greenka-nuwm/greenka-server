@@ -2,7 +2,7 @@ from django.contrib.auth.models import User, UserManager
 from rest_framework import serializers
 
 from tree import models
-from gauth.models import Feedback
+from gauth.models import Feedback, FeedbackImage
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -24,7 +24,19 @@ class UserGETSerializer(UserSerializer):
         depth = 1
 
 
+class FeedbackImageSerializer(serializers.ModelSerializer): 
+    url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = FeedbackImage
+        fields = ('url', )
+
+    def get_url(self, image):
+        return '/' + str(image.url)
+
+
 class FeedbackSerializer(serializers.ModelSerializer):
+    images = FeedbackImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Feedback

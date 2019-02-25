@@ -1,4 +1,5 @@
 import os
+import os.path
 
 from django.db.models import F, Func, Max, Min
 
@@ -53,26 +54,40 @@ def get_range(queryset, latitude, longitude, outer_border, inner_border=0):
     return query
 
 
+def __base_save_image(path, img_obj):
+    """Base procedure to save uploaded image on disk."""
+    if img_obj.content_type.startswith('image/'):
+        try:
+            with open(path, 'wb') as out_file:
+                out_file.write(img_obj.read())
+        except FileNotFoundError:
+            import pdb; pdb.set_trace()
+            os.makedirs(os.path.dirname(path))
+            __base_save_image(path, img_obj)
+    else:
+        raise ValueError("Only image accepted.")
+
+
 def save_tree_image(img_obj, tree_obj):
     url = os.path.join(settings.TREE_IMAGE_SAVE_PATH,
                        IMAGE_SAVE_FORMAT % {'pk': tree_obj.pk, 'name': img_obj.name})
-    if img_obj.content_type.startswith('image/'):
-        with open(url, 'wb') as out_file:
-            out_file.write(img_obj.read())
-        return url
-    else:
-        raise ValueError("Only image accepted.")
+    __base_save_image(url, img_obj)
+
+    return url
 
 
 def save_problem_image(img_obj, problem_obj):
     url = os.path.join(settings.PROBLEM_IMAGE_SAVE_PATH,
                        IMAGE_SAVE_FORMAT % {'pk': problem_obj.pk, 'name': img_obj.name})
-    if img_obj.content_type.startswith('image/'):
-        with open(url, 'wb') as out_file:
-            out_file.write(img_obj.read())
-        return url
-    else:
-        raise ValueError("Only image accepted.")
+    __base_save_image(url, img_obj)
+    return url
+
+
+def save_feedback_image(img_obj, feedback_obj):
+    url = os.path.join(settings.FEEDBACK_IMAGE_SAVE_PATH,
+                       IMAGE_SAVE_FORMAT % {'pk': feedback_obj.pk, 'name': img_obj.name})
+    __base_save_image(url, img_obj)
+    return url
 
 
 def obtain_polygon_borders(polygon):

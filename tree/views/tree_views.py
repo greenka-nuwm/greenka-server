@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.exceptions import NotAuthenticated, PermissionDenied
 from django.shortcuts import get_object_or_404
 
+from greenka.helpers import default_auth_classes
 from tree.serializers import TreeSerializer, TreeGETSerializer, TreeGETShortSerializer
 from tree.models import Tree
 from tree.filters import chain_filter_it, TreeFilterException
@@ -45,7 +46,7 @@ class TreeView(generics.ListCreateAPIView):
     """
     queryset = Tree.objects.all()
     serializer_class = TreeSerializer
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication, )
 
     def post(self, request, *args, **kwargs):
         if not IsAuthenticated().has_permission(request, self):
@@ -71,6 +72,7 @@ class TreeView(generics.ListCreateAPIView):
 class TreeDetailsReadOnlyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tree.objects.filter(is_active=True)
     permission_classes = (IsAdminTreeOwnerOrReadOnly, )
+    authentication_classes = (TokenAuthentication, SessionAuthentication, )
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
@@ -82,7 +84,7 @@ class TreeDetailsReadOnlyView(generics.RetrieveUpdateDestroyAPIView):
 
 
 @api_view(['POST'])
-@authentication_classes((TokenAuthentication, ))
+@default_auth_classes
 @permission_classes((IsAuthenticated, ))
 def confirm_tree(request, pk):
     try:
@@ -103,7 +105,7 @@ def confirm_tree(request, pk):
 
 
 @api_view(['POST'])
-@authentication_classes((TokenAuthentication, ))
+@default_auth_classes
 @permission_classes((IsAdminUser, ))
 def set_approve_tree(request, pk):
     """Set approved state of target tree. Use `approved` JSON param."""
@@ -114,9 +116,41 @@ def set_approve_tree(request, pk):
 
 
 @api_view(['GET'])
-@authentication_classes((TokenAuthentication, ))
+@default_auth_classes
 def get_tree_states(request):
     """Return all possible states of tree."""
     result = [{'id': pk, 'name': name}
               for pk, name in zip(Tree.STATE_IDS, Tree.STATE_STRS)]
+    return Response(result)
+
+
+@api_view(['POST'])
+@default_auth_classes
+@permission_classes((IsAuthenticated, ))
+def add_fav_tree(request, pk):
+    import pdb; pdb.set_trace()
+    try:
+        fav_trees = request.user.favourite_trees.all()
+        tree = Tree.objects.all().filter(favourite_treespk=pk)
+    except Exception:
+        return Response({'error': 'Wrong tree ID.'},
+                        status=status.HTTP_400_BAD_REQUEST)
+
+    added = False
+    if tree.confirms.filter(pk=request.user.pk).exists():
+        tree.confirms.remove(request.user)
+    else:
+        added = True
+        tree.confirms.add(request.user)
+    return Response({'added': added, 'removed': not added,
+                     'confirms': tree.confirms.all().count()},
+                    status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@default_auth_classes
+def get_fav_trees(request):
+    """Return all possible states of tree."""
+
+    fav_trees = request.user.favourite_trees.all()
     return Response(result)

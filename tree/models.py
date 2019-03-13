@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
+
+from greenka import settings
 
 
 def get_sentinel_user():
@@ -59,7 +60,7 @@ class Tree(models.Model):
 
     description = models.TextField(blank=True)
 
-    owner = models.ForeignKey(User,
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL,
                               related_name='trees',
                               on_delete=models.SET(get_sentinel_user))
 
@@ -67,7 +68,11 @@ class Tree(models.Model):
     visible = models.BooleanField(default=True)
 
     approved = models.BooleanField(default=False)
-    confirms = models.ManyToManyField(User)
+    confirms = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                      related_name='confirmed_trees')
+    favourite_trees = models.ManyToManyField(settings.AUTH_USER_MODEL, 
+                                             db_table='fav_trees',
+                                             related_name='favourite_trees')
 
     class Meta:
         db_table = 'tree'

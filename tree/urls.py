@@ -14,7 +14,14 @@ sorts = [
     path(r'<int:pk>', tree_views.TreeSortDetailsView.as_view()),
 ]
 
+favourite = [
+    path(r'', tree_views.get_fav_trees),
+    path(r'<int:pk>', tree_views.add_fav_tree),
+]
+
+
 urlpatterns = [
+    path('fav/', include(favourite)),
     path('types/', include(types)),
     path('sorts/', include(sorts)),
     path('states/', tree_views.get_tree_states),

@@ -81,6 +81,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'greenka.wsgi.application'
 
+AUTH_USER_MODEL = 'gauth.User'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
@@ -153,10 +154,17 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ['static',]
 
+# 10mb
+MAX_TREE_IMAGE_SIZE = MAX_PROBLEM_IMAGE_SIZE = 10 * 1024 ** 2
+# 5mb
+MAX_FEEDBACK_IMAGE_SIZE = MAX_USER_IMAGE_SIZE = 5 * 1024 ** 2
+
 TREE_IMAGE_SAVE_PATH = 'static/trees/'
+USER_IMAGE_SAVE_PATH = 'static/users/'
 PROBLEM_IMAGE_SAVE_PATH = 'static/problems/'
 FEEDBACK_IMAGE_SAVE_PATH = 'static/feedbacks/'
 
+# image size limits.
 
 # Facebook configuration
 SOCIAL_AUTH_FACEBOOK_KEY = '261012791127361'

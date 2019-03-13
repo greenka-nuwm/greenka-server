@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+
+from greenka import settings
 
 
 class ProblemType(models.Model):
@@ -34,9 +35,9 @@ class Problem(models.Model):
 
     is_active = models.BooleanField(default=True)
     approved = models.BooleanField(default=False)
-    confirms = models.ManyToManyField(User, 'confirms')
+    confirms = models.ManyToManyField(settings.AUTH_USER_MODEL, 'confirms')
 
-    reporter = models.ForeignKey(User, blank=False, null=False, on_delete=models.CASCADE)
+    reporter = models.ForeignKey(settings.AUTH_USER_MODEL, blank=False, null=False, on_delete=models.CASCADE)
 
     creation_time = models.DateTimeField(auto_now_add=True)
     modification_time = models.DateTimeField(auto_now=True)

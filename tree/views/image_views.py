@@ -1,3 +1,4 @@
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -14,10 +15,11 @@ from greenka.helpers import save_tree_image
 
 class TreeImageCreateView(APIView):
     """Add image"""
+    authentication_classes = (TokenAuthentication, SessionAuthentication, )
+    parser_classes = (MultiPartParser, FormParser, )
+    permission_classes = (IsAuthenticated, IsTreeImageTreeOwner, )
     queryset = TreeImages.objects.all()
     serializer_class = TreeImageSerializer
-    permission_classes = (IsAuthenticated, IsTreeImageTreeOwner, )
-    parser_classes = (MultiPartParser, FormParser, )
 
     def post(self, request, pk):
         try:

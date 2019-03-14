@@ -80,7 +80,7 @@ def chain_filter_problem_state(request, queryset):
     except ValueError:
         raise ProblemFilterException('Failed to parse `state` argument.'
                                      'Use array/list [1, 2, 3] format.')
-    return queryset.filter(problem_state_in=problem_state)
+    return queryset.filter(problem_state__in=problem_state)
 
 
 def chain_filter_confirms(request, queryset):

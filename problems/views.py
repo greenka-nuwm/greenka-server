@@ -12,7 +12,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from greenka.helpers import save_problem_image
+from greenka.helpers import save_problem_image, default_auth_classes
 from problems import serializers
 from problems.filters import ProblemFilterException, chain_filter_it
 from problems.models import Problem, ProblemImage, ProblemState, ProblemType
@@ -166,3 +166,33 @@ class ProblemImageCreateView(APIView):
                                 status=status.HTTP_400_BAD_REQUEST)
             return Response(status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@default_auth_classes
+@permission_classes((IsAuthenticated, ))
+def add_fav_problem(request, pk):
+    added = False
+    try:
+        fav_trees = request.user.favourite_problems.all()
+        problem = Problem.objects.get(pk=pk)
+        if request.user.favourite_problems.filter(pk=problem.pk).exists():
+            request.user.favourite_problems.remove(problem)
+        else:
+            added = True
+            request.user.favourite_problems.add(problem)
+    except Exception as error:
+        return Response({'error': 'Wrong problem ID.'},
+                        status=status.HTTP_400_BAD_REQUEST)
+    return Response({'added': added, 'removed': not added},
+                    status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@default_auth_classes
+@permission_classes((IsAuthenticated, ))
+def get_fav_problems(request):
+    """Return list of favourite user's problems."""
+    fav_problems = request.user.favourite_problems.all()
+    serializer = serializers.ProblemGETShortSerializer(fav_problems, context={'request': request}, many=True)
+    return Response(serializer.data)

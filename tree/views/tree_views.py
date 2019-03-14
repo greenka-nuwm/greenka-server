@@ -128,29 +128,28 @@ def get_tree_states(request):
 @default_auth_classes
 @permission_classes((IsAuthenticated, ))
 def add_fav_tree(request, pk):
-    import pdb; pdb.set_trace()
+    added = False
     try:
         fav_trees = request.user.favourite_trees.all()
-        tree = Tree.objects.all().filter(favourite_treespk=pk)
-    except Exception:
+        tree = Tree.objects.get(pk=pk)
+        if request.user.favourite_trees.filter(pk=tree.pk).exists():
+            request.user.favourite_trees.remove(tree)
+        else:
+            added = True
+            request.user.favourite_trees.add(tree)
+    except Exception as error:
+        print("error: %s" % (error, ))
         return Response({'error': 'Wrong tree ID.'},
                         status=status.HTTP_400_BAD_REQUEST)
-
-    added = False
-    if tree.confirms.filter(pk=request.user.pk).exists():
-        tree.confirms.remove(request.user)
-    else:
-        added = True
-        tree.confirms.add(request.user)
-    return Response({'added': added, 'removed': not added,
-                     'confirms': tree.confirms.all().count()},
+    return Response({'added': added, 'removed': not added},
                     status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
 @default_auth_classes
+@permission_classes((IsAuthenticated, ))
 def get_fav_trees(request):
-    """Return all possible states of tree."""
-
+    """Return user`s favourite problems."""
     fav_trees = request.user.favourite_trees.all()
-    return Response(result)
+    serializer = TreeGETSerializer(fav_trees, context={'request': request}, many=True)
+    return Response(serializer.data)

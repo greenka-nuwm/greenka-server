@@ -43,6 +43,9 @@ class Problem(models.Model):
     modification_time = models.DateTimeField(auto_now=True)
 
     description = models.TextField(max_length=4096, blank=True, null=True)
+    favourite_problems = models.ManyToManyField(settings.AUTH_USER_MODEL, 
+                                                db_table='fav_problems',
+                                                related_name='favourite_problems')
 
     class Meta:
         db_table = 'problem'

@@ -77,6 +77,7 @@ def chain_filter_type(request, queryset):
 def chain_filter_sort(request, queryset):
     """Filter by tree sort."""
     tree_sort = request.GET.get('sort')
+    print("T: ", tree_sort)
     if not tree_sort:
         return queryset
 
@@ -85,8 +86,9 @@ def chain_filter_sort(request, queryset):
         if not isinstance(tree_sort, Iterable) or isinstance(tree_sort, str):
             raise ValueError()
         tree_sort = map(int, tree_sort)
-    except ValueError:
-        raise TreeFilterException('Failed to parse `sort` argument.'
+    except ValueError as error:
+        print("E: ", error)
+        raise TreeFilterException('Failed to parse `sort` argument. '
                                   'Use array/list [1, 2, 3] format.')
     return queryset.filter(tree_sort__in=tree_sort)
 
@@ -106,7 +108,7 @@ def chain_filter_state(request, queryset):
             raise TreeFilterException('Invalid states: %s' % (tree_state, ))
 
     except ValueError:
-        raise TreeFilterException('Failed to parse `sort` argument.'
+        raise TreeFilterException('Failed to parse `state` argument.'
                                   'Use array/list [1, 2, 3] format.')
     return queryset.filter(tree_state__in=tree_state)
 

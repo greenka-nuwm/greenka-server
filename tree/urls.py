@@ -14,20 +14,16 @@ sorts = [
     path(r'<int:pk>', tree_views.TreeSortDetailsView.as_view()),
 ]
 
-favourite = [
-    path(r'', tree_views.get_fav_trees),
-    path(r'<int:pk>', tree_views.add_fav_tree),
-]
-
 
 urlpatterns = [
-    path('fav/', include(favourite)),
+    path('fav/', tree_views.get_fav_trees),
     path('types/', include(types)),
     path('sorts/', include(sorts)),
     path('states/', tree_views.get_tree_states),
     path(r'<int:pk>/', tree_views.TreeDetailsReadOnlyView.as_view()),
     path(r'<int:pk>/confirm/', tree_views.confirm_tree),
     path(r'<int:pk>/approve/', tree_views.set_approve_tree),
+    path(r'<int:pk>/fav/', tree_views.add_fav_tree),
     path(r'', tree_views.TreeView.as_view()),
     path(r'<int:pk>/image/', tree_views.TreeImageCreateView.as_view()),
 ]

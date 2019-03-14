@@ -36,13 +36,12 @@ class TreeSerializer(serializers.ModelSerializer):
     distance = serializers.FloatField(read_only=True)
     images = TreeImageSerializer(many=True, read_only=True)
     confirms = serializers.SerializerMethodField()
+    favourite_trees = None
 
     class Meta:
         model = models.Tree
-        exclude = ('is_active', )
-        read_only = (
-            'confirms',
-        )
+        exclude = ('is_active', 'favourite_trees', )
+        read_only = ('confirms', )
 
     def get_confirms(self, tree):
         return tree.confirms.all().count()
@@ -66,6 +65,13 @@ class TreeGETSerializer(TreeSerializer):
     """Overriding for GET request types."""
     tree_sort = TreeSortSerializer(read_only=True)
     tree_type = TreeTypeSerializer(read_only=True)
+    favourite_trees = serializers.SerializerMethodField()
+
+    def get_favourite_trees(self, tree):
+        """Return if tree is user`s favourite"""
+        if 'request' in self.context and self.context['request'].user:
+            return tree.favourite_trees.filter(pk=self.context.get('request').user.pk).exists()
+        return False
 
 
 class TreeGETShortSerializer(TreeSerializer):
